@@ -163,50 +163,53 @@ Model.find({
 
 
 
-	8. Limit & Offset
-		Model.find({
-			limit: [4, 1]	// 1st Parameter for Limit & 2nd Parameter for Offset
-		}).then(res => {
-			res.send(res);
-		});
+#### Limit & Offset
+```javascript
+Model.find({
+    limit: [4, 1]	// 1st Parameter for Limit & 2nd Parameter for Offset
+}).then(res => {
+    res.send(res);
+});
+```
+##### Only LIMIT
+```javascript
+Model.find({
+    limit: 4
+}).then(res => {
+    res.send(res);
+});
+```
 
 
-		Only LIMIT
-			Model.find({
-				limit: 4		//or
-				limit: [4]
-			}).then(res => {
-				res.send(res);
-			});
+#### Function
+##### Count()
+```javascript
+Model.findByFunction({
+    functions: {
+        name: ‘COUNT’,
+        option: [{
+            column: ‘column1’,
+            as: ‘count’,
+            distinct: true
+        }]
+    }
+    where: {}		// Optional
+}).then(res => {
+    res.send(res);
+});
+```
 
-
-	9. Function
-		Count()
-			Model.findByFunction({
-				functions: {
-					name: ‘COUNT’,
-					option: [{
-						column: ‘column1’,
-						as: ‘count’,
-						distinct: true
-					}]
-				}
-				where: {}		// Optional
-			}).then(res => {
-				res.send(res);
-			});
-
-
-		Avg()
-			functions: {
-				name: ‘AVG’,
-				option: [{
-					column: ‘column1’,
-					as: ‘Average’,
-					distinct: false
-				}]
-			}
-
+##### Avg()
+```javascript
+functions: {
+    name: ‘AVG’,
+    option: [{
+        column: ‘column1’,
+        as: ‘Average’,
+        distinct: false
+    }]
+}
+```
 
 		Max()
 			functions: {

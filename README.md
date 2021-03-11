@@ -254,31 +254,37 @@ functions: {
 
 
 ## DDL
-	1. Data Type
-		BINARY => "BINARY",
-    		BOOLEAN => "BOOLEAN",
+### Data Type
 
+#### NUMBER
+```javascript
+NUMBER(length),
+INT(length),
+INTEGER(length),
+FLOAT,
+DOUBLE,
+```
 
-		NUMBER
-			NUMBER(length),
-			INT(length),
-			INTEGER(length),
-			FLOAT,
-			DOUBLE,
+#### Text
+```javascript
+STRING(length),
+VARCHAR(length),
+CHAR(length),
+```
 
+#### Date Time
+```javascript
+DATE,
+DATETIME,
+TIMESTAMP(),		// (), (LTZ) & (NTZ)
+NOW()
+```
 
-		Text
-			STRING(length),
-			VARCHAR(length),
-			CHAR(length),
-
-
-		Date Time
-			DATE,
-			DATETIME,
-			TIMESTAMP(),		// (), (LTZ) & (NTZ)
-	    		NOW()
-
+#### OTHERS
+```javascript
+BINARY => "BINARY",
+BOOLEAN => "BOOLEAN"
+```
 
 	2. Model Example
 		const SnowflakeOrm = require('../snowflake-orm');

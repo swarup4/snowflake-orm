@@ -59,7 +59,12 @@ Model.find({
 ```javascript
 where: {
     operator: {
-        LIKE: ['fname', 'A%']
+        LIKE: [
+            {
+				filed: 'fname',
+				value: 'A%'
+      		}
+        ]
     }
 }
 ```
@@ -67,22 +72,26 @@ where: {
 ##### NOT LIKE
 ```javascript
 operator: {
-    NOTLIKE: ['fname', 'A%']
+    NOTLIKE: [
+        {
+            filed: 'fname',
+            value: 'A%'
+      	}
+    ]
 }
 ```
 
 ##### BETWEEN
 ```javascript
-		
-			operator: {
-		         	BETWEEN: ['age', 25, 28]
-        			}
+operator: {
+    BETWEEN: ['age', 25, 28]
+}
 ```
 ##### NOT BETWEEN
 ```javascript
-			operator: {
-				NOTBETWEEN: ['age', 25, 28]
-                    	}
+operator: {
+    NOTBETWEEN: ['age', 25, 28]
+}
 ```
 ##### IN
 ```javascript

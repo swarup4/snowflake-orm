@@ -20,9 +20,9 @@ Model.find({}).then(res => {
 ##### Column List  (With All Column)
 ```javascript
 Model.find({
-	column: []
+  column: []
 }).then(res => {
-	res.send(res);
+  res.send(res);
 });
 ```
 

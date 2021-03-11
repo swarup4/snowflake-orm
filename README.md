@@ -255,7 +255,6 @@ functions: {
 
 ## DDL
 ### Data Type
-
 ##### NUMBER
 ```javascript
 NUMBER(length),
@@ -264,14 +263,12 @@ INTEGER(length),
 FLOAT,
 DOUBLE,
 ```
-
 ##### Text
 ```javascript
 STRING(length),
 VARCHAR(length),
 CHAR(length),
 ```
-
 ##### Date Time
 ```javascript
 DATE,
@@ -279,7 +276,6 @@ DATETIME,
 TIMESTAMP(),	// (), (LTZ) & (NTZ)
 NOW()
 ```
-
 ##### OTHERS
 ```javascript
 BINARY => "BINARY",

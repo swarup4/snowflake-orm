@@ -286,29 +286,29 @@ BINARY => "BINARY",
 BOOLEAN => "BOOLEAN"
 ```
 
-### Model Example
+### Model Create Example
 ```javascript
 const SnowflakeOrm = require('../snowflake-orm');
 const Init = SnowflakeOrm.Init;
 const user = new Init("user", {
     id: {
         type: SnowflakeOrm.INT(),
-        primaryKey: true,			        // Primary Key
-        autoIncrement: true			        // Auto Increment
+        primaryKey: true,			// Primary Key
+        autoIncrement: true			// Auto Increment
     },
     fname: SnowflakeOrm.VARCHAR(50),
     lname: SnowflakeOrm.VARCHAR(50),
     username: {
         type: SnowflakeOrm.VARCHAR(70),
-        unique: true,				        // Unique Key
-        allowNull: true				        // Allow Null Value
+        unique: true,				// Unique Key
+        allowNull: true				// Allow Null Value
     },
     email: SnowflakeOrm.VARCHAR(70),
     password: SnowflakeOrm.VARCHAR(50),
     age: SnowflakeOrm.INT(),
     status: {
         type: SnowflakeOrm.INT(1),
-        defaultValue: 1			            // Default Value = 1
+        defaultValue: 1			        // Default Value = 1
     },
     createdAt: {
         type: SnowflakeOrm.TIMESTAMP('LTZ'),
@@ -320,8 +320,8 @@ const user = new Init("user", {
 const userDetails = new ORM("userdetails", {
     id: {
         type: SnowflakeOrm.INT(),
-        primaryKey: true,			        // Primary Key
-        autoIncrement: true		            // Auto Increment
+        primaryKey: true,			// Primary Key
+        autoIncrement: true		        // Auto Increment
     },
     userId: {
         type: SnowflakeOrm.INT(),
@@ -337,81 +337,85 @@ const userDetails = new ORM("userdetails", {
 ```
 
 
+### CRUD
+#### Insert
+```javascript
+Model.save(req.body).then(res => {
+    res.send(res);
+}).catch(err => {
+    res.send(err);
+});
+```
 
-	3. CRUD
-		Insert
-			Model.save(req.body).then(res => {
-				res.send(res);
-			}).catch(err => {
-				res.send(err);
-			});
+#### Update
+```javascript
+Model.update(req.body, {
+    where: {
+        condition: {
+            ‘fname’: ‘Swarup’,
+            ‘lname’: ‘Saha’,
+        }
+    }
+}).then(res => {
+    res.send(res);
+}).catch(err => {
+    res.send(err);
+});
+```
 
+#### UpdateByID
+```javascript
+Model.updateById(req.body, id).then(res => {
+    res.send(res);
+}).catch(err => {
+    res.send(err);
+});
+```
 
-		Update
-			Model.update(req.body, {
-				where: {
-					condition: {
-                        				‘fname’: ‘Swarup’,
-			                        ‘lname’: ‘Saha’,
-					}
-				}
-			}).then(res => {
-				res.send(res);
-			}).catch(err => {
-				res.send(err);
-			});
+#### Delete
+```javascript
+Model.update({
+    where: {
+        condition: {
+            ‘fname’: ‘Swarup’,
+            ‘lname’: ‘Saha’,
+        }
+    }
+}).then(res => {
+    res.send(res);
+}).catch(err => {
+    res.send(err);
+});
+```
 
+#### DeleteByID
+```javascript
+Model.deleteById(id).then(res => {
+    res.send(res);
+}).catch(err => {
+    res.send(err);
+});
+```
 
-		UpdateByID
-			Model.updateById(req.body, id).then(res => {
-				res.send(res);
-			}).catch(err => {
-				res.send(err);
-			});
+#### Raw Query
+```javascript
+const Query = require('../snowflake-orm’).query;
+// With Params
+let sql = "SELECT * FROM USER WHERE FNAME = ?";
+Query(sql, [“Swarup"]).then(data => {
+    res.send(data);
+}).catch(err => {
+    console.log(err);
+});
 
-
-		Delete
-			Model.update({
-				where: {
-					condition: {
-                        				‘fname’: ‘Swarup’,
-			                        ‘lname’: ‘Saha’,
-					}
-				}
-			}).then(res => {
-				res.send(res);
-			}).catch(err => {
-				res.send(err);
-			});
-
-
-		DeleteByID
-			Model.deleteById(id).then(res => {
-				res.send(res);
-			}).catch(err => {
-				res.send(err);
-			});
-
-
-Raw Query 
-	const Query = require('../snowflake-orm’).query;
-	// With Params
-	let sql = "SELECT * FROM USER WHERE FNAME = ?";
-	Query(sql, [“Swarup"]).then(data => {
-		res.send(data);
-	}).catch(err => {
-		console.log(err);
-	});
-
-
-	// Without Params
-	let sql = "SELECT * FROM USER";
-	Query(sql).then(data => {
-		res.send(data);
-	}).catch(err => {
-		console.log(err);
-	});
-
+// Without Params
+let sql = "SELECT * FROM USER";
+Query(sql).then(data => {
+    res.send(data);
+}).catch(err => {
+    console.log(err);
+});
+```
 
 Joining 
 	1. Inner Join

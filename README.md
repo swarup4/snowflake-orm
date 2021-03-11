@@ -211,46 +211,49 @@ functions: {
 }
 ```
 
-		Max()
-			functions: {
-				name: ‘MAX’,
-				option: [{
-					column: ‘column1’,
-					as: ‘maximum’,
-					distinct: true
-				}]
-			}
+##### Max()
+```javascript
+functions: {
+    name: ‘MAX’,
+    option: [{
+        column: ‘column1’,
+        as: ‘maximum’,
+        distinct: true
+    }]
+}
+```
+
+##### Min()
+```javascript
+functions: {
+    name: ‘MIN’,
+    option: [{
+        column: ‘column1’,
+        as: ‘minimum’,
+        distinct: false
+    }]
+}
+```
+
+##### Sum()
+```javascript
+functions: {
+    name: ‘SUM’,
+    option: [{
+        column: ‘column1’,
+        as: ‘sum1’,
+        distinct: false
+    }, {
+        column: ‘column2’,
+        as: ‘sum2’,
+        distinct: false
+    }]
+}
+```
 
 
-		Min()
-			functions: {
-				name: ‘MIN’,
-				option: [{
-					column: ‘column1’,
-					as: ‘minimum’,
-					distinct: false
-				}]
-			}
 
-
-		Sum()
-			functions: {
-				name: ‘SUM’,
-				option: [{
-					column: ‘column1’,
-					as: ‘sum1’,
-					distinct: false
-				}, {
-					column: ‘column2’,
-					as: ‘sum2’,
-					distinct: false
-				}]
-			}
-
-
-
-
-DDL
+## DDL
 	1. Data Type
 		BINARY => "BINARY",
     		BOOLEAN => "BOOLEAN",

@@ -479,6 +479,7 @@ Model.fullJoin(obj).then(data => {
 
 ## SubQuery 
 ### Condition
+```javascript
 let obj = {
     column:  ['fname', 'lname'],
     where: {
@@ -504,3 +505,4 @@ Model.find(obj).then(data => {
 }).catch(err => {
     console.log(err);
 });
+```

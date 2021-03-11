@@ -3,11 +3,11 @@
 
 # Documentation for SnowFlake ORM
 
-### DQL
+## DQL
 
-#### Find
+### Find
 
-##### Find All
+#### Find All
 ```javascript
 Model.find({}).then(res => {
     res.send(res);
@@ -17,7 +17,7 @@ Model.find({}).then(res => {
 ```
 
 
-##### Column List  (With All Column)
+#### Column List  (With All Column)
 ```javascript
 Model.find({
     column: []
@@ -27,7 +27,7 @@ Model.find({
 ```
 
 
-##### Column List  (With Specific Column)
+#### Column List  (With Specific Column)
 ```javascript
 Model.find({
     column: [column1, column2, column3]
@@ -37,7 +37,7 @@ Model.find({
 
 ```
 
-##### Where Clause  (With Equal)
+#### Where Clause  (With Equal)
 ```javascript
 Model.find({
     where: {
@@ -54,8 +54,8 @@ Model.find({
 ```
 
 
-##### Where Clause  (With Operator)
-###### LIKE
+#### Where Clause  (With Operator)
+##### LIKE
 ```javascript
 where: {
     operator: {
@@ -71,84 +71,66 @@ operator: {
 }
 ```
 
-		BETWEEN
+##### BETWEEN
+```javascript
+		
 			operator: {
 		         	BETWEEN: ['age', 25, 28]
         			}
-
-
-		NOT BETWEEN
+```
+##### NOT BETWEEN
+```javascript
 			operator: {
 				NOTBETWEEN: ['age', 25, 28]
                     	}
-
-
-		IN
+```
+##### IN
+```javascript
 			operator: {
 				IN: ['age', 24, 26, 28]
 			}
-
-
+```
+```javascript
 		//Need to be
 			IN: {
 				filed: 'age',
 				value: [24, 26, 28]
       			}
+```
 
-
-function whereClause(param1,result) {
-  startpoint = end = 0
-  string = '('
-  
-  while(end < result.length){
-  end = startpoint + 16000
-  str = result.slice(startpoint,end).join('\',\'')
-  string = string.concat( " "+param1 +" in ('"+str+"') or \n")
-  startpoint = end}
-  
-  string = string.slice(0,-4)
-  string = string.concat(')')
-  return string
-}
-
-
-
-
-
-
+```javascript
 		NOT IN
 			operator: {
 				NOTIN: ['age', 24, 26, 28]
                     	}
-
-
+```
+```javascript
 		GREATER THEN
 			operator: {
                         		GT: ['age', 25]
                     	}
-
-
+```
+```javascript
 		GREATER THEN OR EQUAL
 			operator: {
                         		GTE: ['age', 25]
                     	}
-
-
+```
+```javascript
 		LESS THEN
 			operator: {
                         		LT: ['age', 27]
                     	}
-
-
+```
+```javascript
 		LESS THEN OR EQUAL
 			operator: {
                         		LTE: ['age', 27]
                     	}
+```
 
-
-
-
-	6. Order By
+Order By
+```javascript
 		Model.find({
 			order: {
 				field: ‘column’,

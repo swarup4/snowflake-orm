@@ -10,9 +10,9 @@
 ##### Find All
 ```javascript
 Model.find({}).then(res => {
-	res.send(res);
+    res.send(res);
 }).catch(err => {
-	res.send(err);
+    res.send(err);
 });
 ```
 
@@ -20,16 +20,16 @@ Model.find({}).then(res => {
 ##### Column List  (With All Column)
 ```javascript
 Model.find({
-  column: []
+    column: []
 }).then(res => {
-  res.send(res);
+    res.send(res);
 });
 ```
 
 
 ##### Column List  (With Specific Column)
 ```javascript
-	column: [column1, column2, column3]
+column: [column1, column2, column3]
 ```
 
 ##### Where Clause  (With Equal)

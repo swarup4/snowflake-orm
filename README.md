@@ -61,9 +61,9 @@ where: {
     operator: {
         LIKE: [
             {
-				filed: 'fname',
-				value: 'A%'
-      		}
+                filed: 'fname',
+                value: 'A%'
+            }
         ]
     }
 }
@@ -95,74 +95,71 @@ operator: {
 ```
 ##### IN
 ```javascript
-			operator: {
-				IN: ['age', 24, 26, 28]
-			}
+//operator: {
+    //IN: ['age', 24, 26, 28]
+//}
 ```
 ```javascript
-		//Need to be
-			IN: {
-				filed: 'age',
-				value: [24, 26, 28]
-      			}
+IN: {
+    filed: 'age',
+    value: [24, 26, 28]
+}
+```
+##### NOT IN
+```javascript
+operator: {
+    NOTIN: ['age', 24, 26, 28]
+}
+```
+##### GREATER THEN
+```javascript
+operator: {
+    GT: ['age', 25]
+}
+```
+##### GREATER THEN OR EQUAL
+```javascript
+operator: {
+    GTE: ['age', 25]
+}
+```
+##### LESS THEN
+```javascript
+operator: {
+    LT: ['age', 27]
+}
+```
+##### LESS THEN OR EQUAL
+```javascript
+operator: {
+    LTE: ['age', 27]
+}
 ```
 
+##### Order By
 ```javascript
-		NOT IN
-			operator: {
-				NOTIN: ['age', 24, 26, 28]
-                    	}
-```
-```javascript
-		GREATER THEN
-			operator: {
-                        		GT: ['age', 25]
-                    	}
-```
-```javascript
-		GREATER THEN OR EQUAL
-			operator: {
-                        		GTE: ['age', 25]
-                    	}
-```
-```javascript
-		LESS THEN
-			operator: {
-                        		LT: ['age', 27]
-                    	}
-```
-```javascript
-		LESS THEN OR EQUAL
-			operator: {
-                        		LTE: ['age', 27]
-                    	}
+Model.find({
+    order: {
+        field: ‘column’,
+        orderBy: ‘DESC	// For Descending order DESC & for Ascending Order ASC. Default is Ascending order
+    }
+}).then(res => {
+    res.send(res);
+});
 ```
 
-Order By
+#### Distinct
 ```javascript
-		Model.find({
-			order: {
-				field: ‘column’,
-				orderBy: ‘DESC	// For Descending order DESC & for Ascending Order ASC. Default is Ascending order
-			}
-		}).then(res => {
-			res.send(res);
-		});
-
-
-
-
-	7. Distinct
-		Model.find({
-			column: [column1, column2, column3],
-			distinct: true,
-			where: {}
-		}).then(res => {
-			res.send(res);
-		}).catch(err => {
-			res.send(err);
-		});
-
+Model.find({
+    column: [column1, column2, column3],
+    distinct: true,
+    where: {}
+}).then(res => {
+    res.send(res);
+}).catch(err => {
+    res.send(err);
+});
+```
 
 
 

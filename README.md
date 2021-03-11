@@ -256,7 +256,7 @@ functions: {
 ## DDL
 ### Data Type
 
-#### NUMBER
+##### NUMBER
 ```javascript
 NUMBER(length),
 INT(length),
@@ -265,75 +265,76 @@ FLOAT,
 DOUBLE,
 ```
 
-#### Text
+##### Text
 ```javascript
 STRING(length),
 VARCHAR(length),
 CHAR(length),
 ```
 
-#### Date Time
+##### Date Time
 ```javascript
 DATE,
 DATETIME,
-TIMESTAMP(),		// (), (LTZ) & (NTZ)
+TIMESTAMP(),	// (), (LTZ) & (NTZ)
 NOW()
 ```
 
-#### OTHERS
+##### OTHERS
 ```javascript
 BINARY => "BINARY",
 BOOLEAN => "BOOLEAN"
 ```
 
-	2. Model Example
-		const SnowflakeOrm = require('../snowflake-orm');
-		const Init = SnowflakeOrm.Init;
-		const user = new Init("user", {
-    			id: {
-				type: SnowflakeOrm.INT(),
-				primaryKey: true,			// Primary Key
-			        autoIncrement: true			// Auto Increment
-    			},
-			fname: SnowflakeOrm.VARCHAR(50),
-			lname: SnowflakeOrm.VARCHAR(50),
-			username: {
-				type: SnowflakeOrm.VARCHAR(70),
-				unique: true,				// Unique Key
-				allowNull: true				// Allow Null Value
-			},
-			email: SnowflakeOrm.VARCHAR(70),
-			password: SnowflakeOrm.VARCHAR(50),
-			age: SnowflakeOrm.INT(),
-			status: {
-				type: SnowflakeOrm.INT(1),
-				defaultValue: 1			// Default Value = 1
-			},
-			createdAt: {
-				type: SnowflakeOrm.TIMESTAMP('LTZ'),
-				defaultValue: SnowflakeOrm.NOW()		// Default Value = Current Time
-			}
-		});
+### Model Example
+```javascript
+const SnowflakeOrm = require('../snowflake-orm');
+const Init = SnowflakeOrm.Init;
+const user = new Init("user", {
+    id: {
+        type: SnowflakeOrm.INT(),
+        primaryKey: true,			        // Primary Key
+        autoIncrement: true			        // Auto Increment
+    },
+    fname: SnowflakeOrm.VARCHAR(50),
+    lname: SnowflakeOrm.VARCHAR(50),
+    username: {
+        type: SnowflakeOrm.VARCHAR(70),
+        unique: true,				        // Unique Key
+        allowNull: true				        // Allow Null Value
+    },
+    email: SnowflakeOrm.VARCHAR(70),
+    password: SnowflakeOrm.VARCHAR(50),
+    age: SnowflakeOrm.INT(),
+    status: {
+        type: SnowflakeOrm.INT(1),
+        defaultValue: 1			            // Default Value = 1
+    },
+    createdAt: {
+        type: SnowflakeOrm.TIMESTAMP('LTZ'),
+        defaultValue: SnowflakeOrm.NOW()	// Default Value = Current Time
+    }
+});
 
 
-		const userDetails = new ORM("userdetails", {
-			id: {
-				type: SnowflakeOrm.INT(),
-				primaryKey: true,			// Primary Key
-				autoIncrement: true		// Auto Increment
-			},
-			userId: {
-				type: SnowflakeOrm.INT(),
-				allowNull: false,			// Do Not Allow Null Value
-				references: {				// Foreign Key
-					model: 'user', 			// 'user' refers to table name
-					column: 'id', 			// 'id' refers to column name in user table
-				}
-			},
-			phone: SnowflakeOrm.INT(),
-			gender: SnowflakeOrm.VARCHAR(10)
-		});
-
+const userDetails = new ORM("userdetails", {
+    id: {
+        type: SnowflakeOrm.INT(),
+        primaryKey: true,			        // Primary Key
+        autoIncrement: true		            // Auto Increment
+    },
+    userId: {
+        type: SnowflakeOrm.INT(),
+        allowNull: false,			// Do Not Allow Null Value
+        references: {				// Foreign Key
+            model: 'user', 			// 'user' refers to table name
+            column: 'id', 			// 'id' refers to column name in user table
+        }
+    },
+    phone: SnowflakeOrm.INT(),
+    gender: SnowflakeOrm.VARCHAR(10)
+});
+```
 
 
 

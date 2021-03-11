@@ -420,61 +420,61 @@ Query(sql).then(data => {
 });
 ```
 
-Joining 
-	1. Inner Join
+## Joining 
+### Inner Join
+```javascript
+let obj = {
+    column: ['fname'],
+    eqColumn: 'id',
+    include: [{
+        model: Model2,
+        column: ['homeTown'],
+        eqcolumn: 'userId'
+    }, {
+        model: Model3,
+        column: ['image'],
+        eqColumn: 'userId'
+    }],
+    where: {
+        operator: {
+            GT: ['age', 26]
+        }
+    }
+}
 
+Model.innerJoin(obj).then(data => {
+    res.send(data);
+}).catch(err => {
+    console.log(err);
+});
+```
 
-		let obj = {
-        			column: ['fname'],
-		        eqColumn: 'id',
-		        include: [{
-				model: Model2,
-				column: ['homeTown'],
-				eqcolumn: 'userId'
-			}, {
-				model: Model3,
-				column: ['image'],
-				eqColumn: 'userId'
-			}],
-			where: {
-            			operator: {
-					GT: ['age', 26]
-				}
-        			}
-    		}
+### Right Join
+```javascript
+Model.rightJoin(obj).then(data => {
+    res.send(data);
+}).catch(err => {
+	console.log(err);
+});
+```
 
+### Left Join
+```javascript
+Model.leftJoin(obj).then(data => {
+    res.send(data);
+}).catch(err => {
+    console.log(err);
+});
+```
 
-    		Model.innerJoin(obj).then(data => {
-			res.send(data);
-		}).catch(err => {
-			console.log(err);
-		});
-
-
-	2. Right Join
-    		Model.rightJoin(obj).then(data => {
-			res.send(data);
-		}).catch(err => {
-			console.log(err);
-		});
-
-
-	3. Left Join
-    		Model.leftJoin(obj).then(data => {
-			res.send(data);
-		}).catch(err => {
-			console.log(err);
-		});
-
-
-	4. Full Join
-		Model.fullJoin(obj).then(data => {
-			res.send(data);
-		}).catch(err => {
-			console.log(err);
-		});
-
-
+### Full Join
+```javascript
+Model.fullJoin(obj).then(data => {
+    res.send(data);
+}).catch(err => {
+    console.log(err);
+});
+```
 
 
 SubQuery 

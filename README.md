@@ -400,15 +400,18 @@ Model.deleteById(id).then(res => {
 #### Raw Query
 ```javascript
 const Query = require('../snowflake-orm’).query;
-// With Params
+```
+##### With Params
+```javascript
 let sql = "SELECT * FROM USER WHERE FNAME = ?";
 Query(sql, [“Swarup"]).then(data => {
     res.send(data);
 }).catch(err => {
     console.log(err);
 });
-
-// Without Params
+```
+##### Without Params
+```javascript
 let sql = "SELECT * FROM USER";
 Query(sql).then(data => {
     res.send(data);

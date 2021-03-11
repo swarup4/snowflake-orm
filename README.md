@@ -29,38 +29,47 @@ Model.find({
 
 ##### Column List  (With Specific Column)
 ```javascript
-column: [column1, column2, column3]
+Model.find({
+    column: [column1, column2, column3]
+}).then(res => {
+    res.send(res);
+});
+
 ```
 
 ##### Where Clause  (With Equal)
-		Model.find({
-			where: {
-				condition: {
-       			‘fname’: ‘Swarup’,
-       			‘lname’: ‘Saha’,
-        		}
-			}
-		}).then(res => {
-			res.send(res);
-		}).catch(err => {
-			res.send(err);
-		});
+```javascript
+Model.find({
+    where: {
+        condition: {
+            ‘fname’: ‘Swarup’,
+            ‘lname’: ‘Saha’,
+        }
+    }
+}).then(res => {
+    res.send(res);
+}).catch(err => {
+    res.send(err);
+});
+```
 
 
 ##### Where Clause  (With Operator)
-		LIKE
-			where: {
-                    		operator: {
-                        			LIKE: ['fname', 'A%']
-                    		}
-                		}
+###### LIKE
+```javascript
+where: {
+    operator: {
+        LIKE: ['fname', 'A%']
+    }
+}
+```
 
-
-		NOT LIKE
-			operator: {
-                        		NOTLIKE: ['fname', 'A%']
-                    	}
-
+##### NOT LIKE
+```javascript
+operator: {
+    NOTLIKE: ['fname', 'A%']
+}
+```
 
 		BETWEEN
 			operator: {

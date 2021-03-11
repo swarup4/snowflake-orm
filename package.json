@@ -1,0 +1,23 @@
+{
+  "name": "snowflake-orm",
+  "version": "1.0.0",
+  "description": "NodeJS ORM for Snowflake DB ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swarup4/snowflake-orm.git"
+  },
+  "keywords": [
+    "Node JS",
+    "Snowflake DB"
+  ],
+  "author": "Swarup Saha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/swarup4/snowflake-orm/issues"
+  },
+  "homepage": "https://github.com/swarup4/snowflake-orm#readme"
+}

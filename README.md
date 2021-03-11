@@ -8,24 +8,29 @@
 #### Find
 
 ##### Find All
-		Model.find({}).then(res => {
-			res.send(res);
-		}).catch(err => {
-			res.send(err);
-		});
+```javascript
+Model.find({}).then(res => {
+	res.send(res);
+}).catch(err => {
+	res.send(err);
+});
+```
 
 
 ##### Column List  (With All Column)
-		Model.find({
-			column: []
-		}).then(res => {
-			res.send(res);
-		});
+```javascript
+Model.find({
+	column: []
+}).then(res => {
+	res.send(res);
+});
+```
 
 
 ##### Column List  (With Specific Column)
-		column: [column1, column2, column3]
-
+```javascript
+	column: [column1, column2, column3]
+```
 
 ##### Where Clause  (With Equal)
 		Model.find({

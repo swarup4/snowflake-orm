@@ -1,7 +1,24 @@
-# snowflake-orm
+# SNOWFLAKE-ORM
 
 
 # Documentation for SnowFlake ORM
+
+## Create Connection
+For creating the connection you have to Write this bellow code 
+```javascript
+const snowflakeOrm = require('./snowflake-orm');
+
+const dbConfig = {
+    username: 'Your Username',
+    password: 'Your Password',
+    account: 'Your Account Name',
+    warehouse: 'Your Warehouse Name',
+    database: 'Your Database Name',
+    schema: 'Your Schema Name',
+    role: 'Your Role Name'
+};
+snowflakeOrm.connect(dbConfig);
+```
 
 ## DQL
 

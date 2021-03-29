@@ -44,7 +44,7 @@ const snowflakeObj = {
         });
     },
     
-    init: function (table, cols) {
+    Init: function (table, cols) {
         this.table = table;
         this.cols = cols;
 

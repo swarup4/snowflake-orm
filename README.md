@@ -200,9 +200,9 @@ operator: {
 operator: {
     IN: ['age', 24, 26, 28]
 }
-```
+
 or
-```javascript
+
 operator: {
     IN: {
         filed: 'age',
@@ -215,9 +215,9 @@ operator: {
 operator: {
     NOTIN: ['age', 24, 26, 28]
 }
-```
+
 or
-```javascript
+
 operator: {
     NOTIN: {
         filed: 'age',

@@ -77,7 +77,7 @@ const user = new Init("user", {
     age: SnowflakeOrm.INT(),
     status: {
         type: SnowflakeOrm.INT(1),
-        defaultValue: 1			        // Default Value = 1
+        defaultValue: 1			    // Default Value = 1
     },
     createdAt: {
         type: SnowflakeOrm.TIMESTAMP('LTZ'),
@@ -90,7 +90,7 @@ const userDetails = new ORM("userdetails", {
     id: {
         type: SnowflakeOrm.INT(),
         primaryKey: true,			// Primary Key
-        autoIncrement: true		        // Auto Increment
+        autoIncrement: true		    // Auto Increment
     },
     userId: {
         type: SnowflakeOrm.INT(),

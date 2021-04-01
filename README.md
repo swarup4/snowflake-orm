@@ -105,9 +105,9 @@ const userDetails = new ORM("userdetails", {
 });
 ```
 
-## DQL
 
-### Find
+### Fetch Data
+Getting data from database.
 
 #### Find All
 ```javascript
@@ -353,6 +353,7 @@ functions: {
 }
 ```
 
+
 ### CRUD
 #### Insert
 ```javascript
@@ -436,8 +437,8 @@ Query(sql).then(data => {
 });
 ```
 
-## Joining 
-### Inner Join
+### Joining 
+#### Inner Join
 ```javascript
 let obj = {
     column: ['fname'],
@@ -465,7 +466,7 @@ Model.innerJoin(obj).then(data => {
 });
 ```
 
-### Right Join
+#### Right Join
 ```javascript
 Model.rightJoin(obj).then(data => {
     res.send(data);
@@ -474,7 +475,7 @@ Model.rightJoin(obj).then(data => {
 });
 ```
 
-### Left Join
+#### Left Join
 ```javascript
 Model.leftJoin(obj).then(data => {
     res.send(data);
@@ -483,7 +484,7 @@ Model.leftJoin(obj).then(data => {
 });
 ```
 
-### Full Join
+#### Full Join
 ```javascript
 Model.fullJoin(obj).then(data => {
     res.send(data);
@@ -493,8 +494,9 @@ Model.fullJoin(obj).then(data => {
 ```
 
 
-## SubQuery 
-### Condition
+### SubQuery 
+
+#### Condition
 ```javascript
 let obj = {
     column:  ['fname', 'lname'],

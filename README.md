@@ -1,9 +1,16 @@
 # SNOWFLAKE-ORM
 
+## Installation
+```sh
+$ npm i snowflake-orm
 
-# Documentation for SnowFlake ORM
+# And add the dependency:
+$ npm i snowflake-sdk
+```
 
-## Create Connection
+## Documentation
+
+### Connecting to Snowflake DB
 For creating the connection you have to Write this bellow code 
 ```javascript
 const snowflakeOrm = require('./snowflake-orm');
@@ -18,6 +25,84 @@ const dbConfig = {
     role: 'Your Role Name'
 };
 snowflakeOrm.connect(dbConfig);
+```
+
+### Data Type
+##### NUMBER
+```javascript
+NUMBER(length),
+INT(length),
+INTEGER(length),
+FLOAT,
+DOUBLE,
+```
+##### Text
+```javascript
+STRING(length),
+VARCHAR(length),
+CHAR(length),
+```
+##### Date Time
+```javascript
+DATE,
+DATETIME,
+TIMESTAMP(),	// (), (LTZ) & (NTZ)
+NOW()
+```
+##### OTHERS
+```javascript
+BINARY => "BINARY",
+BOOLEAN => "BOOLEAN"
+```
+
+### Model Create Example
+```javascript
+const SnowflakeOrm = require('../snowflake-orm');
+const Init = SnowflakeOrm.Init;
+const user = new Init("user", {
+    id: {
+        type: SnowflakeOrm.INT(),
+        primaryKey: true,			// Primary Key
+        autoIncrement: true			// Auto Increment
+    },
+    fname: SnowflakeOrm.VARCHAR(50),
+    lname: SnowflakeOrm.VARCHAR(50),
+    username: {
+        type: SnowflakeOrm.VARCHAR(70),
+        unique: true,				// Unique Key
+        allowNull: true				// Allow Null Value
+    },
+    email: SnowflakeOrm.VARCHAR(70),
+    password: SnowflakeOrm.VARCHAR(50),
+    age: SnowflakeOrm.INT(),
+    status: {
+        type: SnowflakeOrm.INT(1),
+        defaultValue: 1			        // Default Value = 1
+    },
+    createdAt: {
+        type: SnowflakeOrm.TIMESTAMP('LTZ'),
+        defaultValue: SnowflakeOrm.NOW()	// Default Value = Current Time
+    }
+});
+
+
+const userDetails = new ORM("userdetails", {
+    id: {
+        type: SnowflakeOrm.INT(),
+        primaryKey: true,			// Primary Key
+        autoIncrement: true		        // Auto Increment
+    },
+    userId: {
+        type: SnowflakeOrm.INT(),
+        allowNull: false,			// Do Not Allow Null Value
+        references: {				// Foreign Key
+            model: 'user', 			// 'user' refers to table name
+            column: 'id', 			// 'id' refers to column name in user table
+        }
+    },
+    phone: SnowflakeOrm.INT(),
+    gender: SnowflakeOrm.VARCHAR(10)
+});
 ```
 
 ## DQL
@@ -267,88 +352,6 @@ functions: {
     }]
 }
 ```
-
-
-
-## DDL
-### Data Type
-##### NUMBER
-```javascript
-NUMBER(length),
-INT(length),
-INTEGER(length),
-FLOAT,
-DOUBLE,
-```
-##### Text
-```javascript
-STRING(length),
-VARCHAR(length),
-CHAR(length),
-```
-##### Date Time
-```javascript
-DATE,
-DATETIME,
-TIMESTAMP(),	// (), (LTZ) & (NTZ)
-NOW()
-```
-##### OTHERS
-```javascript
-BINARY => "BINARY",
-BOOLEAN => "BOOLEAN"
-```
-
-### Model Create Example
-```javascript
-const SnowflakeOrm = require('../snowflake-orm');
-const Init = SnowflakeOrm.Init;
-const user = new Init("user", {
-    id: {
-        type: SnowflakeOrm.INT(),
-        primaryKey: true,			// Primary Key
-        autoIncrement: true			// Auto Increment
-    },
-    fname: SnowflakeOrm.VARCHAR(50),
-    lname: SnowflakeOrm.VARCHAR(50),
-    username: {
-        type: SnowflakeOrm.VARCHAR(70),
-        unique: true,				// Unique Key
-        allowNull: true				// Allow Null Value
-    },
-    email: SnowflakeOrm.VARCHAR(70),
-    password: SnowflakeOrm.VARCHAR(50),
-    age: SnowflakeOrm.INT(),
-    status: {
-        type: SnowflakeOrm.INT(1),
-        defaultValue: 1			        // Default Value = 1
-    },
-    createdAt: {
-        type: SnowflakeOrm.TIMESTAMP('LTZ'),
-        defaultValue: SnowflakeOrm.NOW()	// Default Value = Current Time
-    }
-});
-
-
-const userDetails = new ORM("userdetails", {
-    id: {
-        type: SnowflakeOrm.INT(),
-        primaryKey: true,			// Primary Key
-        autoIncrement: true		        // Auto Increment
-    },
-    userId: {
-        type: SnowflakeOrm.INT(),
-        allowNull: false,			// Do Not Allow Null Value
-        references: {				// Foreign Key
-            model: 'user', 			// 'user' refers to table name
-            column: 'id', 			// 'id' refers to column name in user table
-        }
-    },
-    phone: SnowflakeOrm.INT(),
-    gender: SnowflakeOrm.VARCHAR(10)
-});
-```
-
 
 ### CRUD
 #### Insert

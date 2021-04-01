@@ -1,7 +1,7 @@
 {
   "name": "snowflake-orm",
-  "version": "1.0.0",
-  "description": "NodeJS ORM for Snowflake DB ",
+  "version": "1.0.1",
+  "description": "snowflake-orm is a ORM for NodeJS & Snowflake DB",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,13 +11,16 @@
     "url": "git+https://github.com/swarup4/snowflake-orm.git"
   },
   "keywords": [
-    "Node JS",
-    "Snowflake DB"
+    "Node JS", "Snowflake DB", "orm", "object relational mapper", "sql", "snowflake orm",
+    "model"
   ],
   "author": "Swarup Saha",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/swarup4/snowflake-orm/issues"
   },
-  "homepage": "https://github.com/swarup4/snowflake-orm#readme"
+  "homepage": "https://github.com/swarup4/snowflake-orm#readme",
+  "dependencies": {
+    "snowflake-sdk": "^1.6.0"
+  }
 }

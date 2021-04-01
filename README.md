@@ -201,7 +201,7 @@ operator: {
     IN: ['age', 24, 26, 28]
 }
 
-or
+//Or
 
 operator: {
     IN: {
@@ -216,7 +216,7 @@ operator: {
     NOTIN: ['age', 24, 26, 28]
 }
 
-or
+//Or
 
 operator: {
     NOTIN: {

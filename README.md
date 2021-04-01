@@ -197,20 +197,32 @@ operator: {
 ```
 ##### IN
 ```javascript
-//operator: {
-    //IN: ['age', 24, 26, 28]
-//}
+operator: {
+    IN: ['age', 24, 26, 28]
+}
 ```
+or
 ```javascript
-IN: {
-    filed: 'age',
-    value: [24, 26, 28]
+operator: {
+    IN: {
+        filed: 'age',
+        value: [24, 26, 28]
+    }
 }
 ```
 ##### NOT IN
 ```javascript
 operator: {
     NOTIN: ['age', 24, 26, 28]
+}
+```
+or
+```javascript
+operator: {
+    NOTIN: {
+        filed: 'age',
+        value: [24, 26, 28]
+    }
 }
 ```
 ##### GREATER THEN

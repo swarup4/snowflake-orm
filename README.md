@@ -6,6 +6,7 @@ $ npm i snowflake-orm
 
 # And add the dependency:
 $ npm i snowflake-sdk
+$ npm i uuid
 ```
 
 ## Documentation
@@ -13,7 +14,7 @@ $ npm i snowflake-sdk
 ### Connecting to Snowflake DB
 For creating the connection you have to Write this bellow code 
 ```javascript
-const snowflakeOrm = require('./snowflake-orm');
+const snowflakeOrm = require('snowflake-orm');
 
 const dbConfig = {
     username: 'Your Username',
@@ -57,11 +58,11 @@ BOOLEAN => "BOOLEAN"
 
 ### Model Create Example
 ```javascript
-const SnowflakeOrm = require('../snowflake-orm');
+const SnowflakeOrm = require('snowflake-orm');
 const Init = SnowflakeOrm.Init;
 const user = new Init("user", {
     id: {
-        type: SnowflakeOrm.INT(),
+        type: SnowflakeOrm.INT,
         primaryKey: true,			// Primary Key
         autoIncrement: true			// Auto Increment
     },
@@ -74,9 +75,9 @@ const user = new Init("user", {
     },
     email: SnowflakeOrm.VARCHAR(70),
     password: SnowflakeOrm.VARCHAR(50),
-    age: SnowflakeOrm.INT(),
+    age: SnowflakeOrm.INT,
     status: {
-        type: SnowflakeOrm.INT(1),
+        type: SnowflakeOrm.INT,
         defaultValue: 1			    // Default Value = 1
     },
     createdAt: {
@@ -88,23 +89,33 @@ const user = new Init("user", {
 
 const userDetails = new ORM("userdetails", {
     id: {
-        type: SnowflakeOrm.INT(),
+        type: SnowflakeOrm.INT,
         primaryKey: true,			// Primary Key
         autoIncrement: true		    // Auto Increment
     },
     userId: {
-        type: SnowflakeOrm.INT(),
+        type: SnowflakeOrm.INT,
         allowNull: false,			// Do Not Allow Null Value
         references: {				// Foreign Key
             model: 'user', 			// 'user' refers to table name
             column: 'id', 			// 'id' refers to column name in user table
         }
     },
-    phone: SnowflakeOrm.INT(),
+    phone: SnowflakeOrm.INT,
     gender: SnowflakeOrm.VARCHAR(10)
 });
 ```
 
+#### Create dynamic table using Model
+```javascript
+Model.create().then(data => {
+    res.send(data);
+}).catch(err => {
+    console.log(err);
+});
+```
+
+Snowflake doesn't support Primary Key, Foreign Key, Unique Key constraint. For that reason don't use these constraint. But constraint are still present in this ORM. 
 
 ### Fetch Data
 Getting data from database.
@@ -178,7 +189,7 @@ operator: {
         {
             filed: 'fname',
             value: 'A%'
-      	}
+        }
     ]
 }
 ```
@@ -368,6 +379,8 @@ functions: {
 
 ### CRUD
 #### Insert
+If you want primary key constraint. But Snowflake doesn't support Primary Key. It's accept duplicate value. So use ID object in Models. ```require: true```. Its autometicly create unique id & insert into table. 
+
 ```javascript
 Model.save(req.body).then(res => {
     res.send(res);

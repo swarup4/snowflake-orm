@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require('uuid');
+
 const DataType = require('./class/dataType');
 const helper = require('./helper');
 const snowflakeConnection = require('./connection');
@@ -83,6 +85,11 @@ const snowflakeObj = {
 
         /* Insert record into table */
         this.save = (data) => {
+            if(this.cols.id != undefined && this.cols.id.require != undefined && this.cols.id.require == true){
+                if(data.id == undefined){
+                    data.id = uuidv4();
+                }
+            }
             let sql = `insert into ${this.table} (${helper.insertTableColumn('column', data).join(', ')}) values (${helper.insertTableColumn('value', data).join(', ')})`;
             return new Promise((resolve, reject) => {
                 dbConnection.execute({

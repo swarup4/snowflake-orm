@@ -35,7 +35,7 @@ const constraints = {
                 sql = sql + " PRIMARY KEY";
                 obj.allowNull = false;
             } else if (key == "unique" && obj[key] == true) {
-                sql = sql + " UNIQUE KEY";
+                sql = sql + " UNIQUE";
             } else if(key == 'references' && Object.keys(key).length !== 0){
                 association = "FOREIGN KEY(" + field + ") REFERENCES " + obj[key].model + "(" + obj[key].column + ")";
             }

@@ -1,34 +1,39 @@
 const DataType = {
-    Binary: "BINARY",
-    Boolean: "BOOLEAN",
+    BINARY: "BINARY",
+    BOOLEAN: "BOOLEAN",
     
-    Float: "FLOAT",
-    Double: "DOUBLE",
+    FLOAT: "FLOAT",
+    DOUBLE: "DOUBLE",
 
-    Date: "DATE",
-    Datetime: "DATETIME",
-    Array: "ARRAY",
+    DATE: "DATE",
+    DATETIME: "DATETIME",
+    ARRAY: "ARRAY",
 
-    String: function (value) {
+    NUMBER: "NUMBER",
+    INT: "INT",
+    INTEGER: "INTEGER",
+
+    STRING: function (value) {
         return value == undefined ? "STRING" : "STRING(" + value + ")";
     },
-    Varchar: function (value) {
+    VARCHAR: function (value) {
         return value == undefined ? "VARCHAR" : "VARCHAR(" + value + ")";
     },
-    Char: function (value) {
+    CHAR: function (value) {
         return value == undefined ? "CHAR" : "CHAR(" + value + ")";
     },
 
-    Number: function (value) {
-        return value == undefined ? "NUMBER" : "NUMBER(" + value + ")";
-    },
-    Int: function (value) {
-        return value == undefined ? "INT" : "INT(" + value + ")";
-    },
-    Integer: function (value) {
-        return value == undefined ? "INTEGER" : "INTEGER(" + value + ")";
-    },
-    Timestamp: function(value){
+    // NUMBER: function (value) {
+    //     return value == undefined ? "NUMBER" : "NUMBER(" + value + ")";
+    // },
+    // INT: function (value) {
+    //     return value == undefined ? "INT" : "INT(" + value + ")";
+    // },
+    // INTEGER: function (value) {
+    //     return value == undefined ? "INTEGER" : "INTEGER(" + value + ")";
+    // },
+
+    TIMESTAMP: function(value){
         if(value == undefined){
             return "TIMESTAMP";
         }else if(value == 'LTZ'){
@@ -37,7 +42,7 @@ const DataType = {
             return "TIMESTAMP_NTZ";
         }
     },
-    Now: function () {
+    NOW: function () {
         return "CURRENT_TIMESTAMP()";
     }
 };

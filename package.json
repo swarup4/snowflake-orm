@@ -1,6 +1,6 @@
 {
   "name": "snowflake-orm",
-  "version": "1.0.3",
+  "version": "1.0.3-beta",
   "description": "snowflake-orm is a ORM for NodeJS & Snowflake DB",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/swarup4/snowflake-orm#readme",
   "dependencies": {
-    "snowflake-sdk": "^1.6.0"
+    "snowflake-sdk": "^1.6.0",
+    "uuid": "^8.3.2"
   }
 }

@@ -3,10 +3,6 @@
 ## Installation
 ```sh
 $ npm i snowflake-orm
-
-# And add the dependency:
-$ npm i snowflake-sdk
-$ npm i uuid
 ```
 
 ## Documentation
@@ -62,10 +58,15 @@ const SnowflakeOrm = require('snowflake-orm');
 const Init = SnowflakeOrm.Init;
 const user = new Init("user", {
     id: {
-        type: SnowflakeOrm.INT,
-        primaryKey: true,			// Primary Key
-        autoIncrement: true			// Auto Increment
+        type: SnowflakeOrm.VARCHAR(50),
+        require: true
     },
+    // This option still has present. But should not use, because Snowflake doesn't support primary key. Instead of using Id field & require: true. Its automatically create for you.
+    // id: {
+    //     type: SnowflakeOrm.INT,
+    //     primaryKey: true,			// Primary Key
+    //     autoIncrement: true			// Auto Increment
+    // },
     fname: SnowflakeOrm.VARCHAR(50),
     lname: SnowflakeOrm.VARCHAR(50),
     username: {
@@ -155,8 +156,8 @@ Model.find({
 Model.find({
     where: {
         condition: {
-            ‘fname’: ‘Swarup’,
-            ‘lname’: ‘Saha’,
+            fname: 'Swarup',
+            lname: 'Saha',
         }
     }
 }).then(res => {
@@ -265,8 +266,8 @@ operator: {
 ```javascript
 Model.find({
     order: {
-        field: ‘column’,
-        orderBy: ‘DESC	// For Descending order DESC & for Ascending Order ASC. Default is Ascending order
+        field: 'column',
+        orderBy: 'DESC'	// For Descending order DESC & for Ascending Order ASC. Default is Ascending order
     }
 }).then(res => {
     res.send(res);
@@ -311,10 +312,10 @@ Model.find({
 ```javascript
 Model.findByFunction({
     functions: {
-        name: ‘COUNT’,
+        name: 'COUNT',
         option: [{
-            column: ‘column1’,
-            as: ‘count’,
+            column: 'column1',
+            as: 'count',
             distinct: true
         }]
     }
@@ -327,10 +328,10 @@ Model.findByFunction({
 ##### Avg()
 ```javascript
 functions: {
-    name: ‘AVG’,
+    name: 'AVG',
     option: [{
-        column: ‘column1’,
-        as: ‘Average’,
+        column: 'column1',
+        as: 'Average',
         distinct: false
     }]
 }
@@ -339,10 +340,10 @@ functions: {
 ##### Max()
 ```javascript
 functions: {
-    name: ‘MAX’,
+    name: 'MAX',
     option: [{
-        column: ‘column1’,
-        as: ‘maximum’,
+        column: 'column1',
+        as: 'maximum',
         distinct: true
     }]
 }
@@ -351,10 +352,10 @@ functions: {
 ##### Min()
 ```javascript
 functions: {
-    name: ‘MIN’,
+    name: 'MIN',
     option: [{
-        column: ‘column1’,
-        as: ‘minimum’,
+        column: 'column1',
+        as: 'minimum',
         distinct: false
     }]
 }
@@ -363,14 +364,14 @@ functions: {
 ##### Sum()
 ```javascript
 functions: {
-    name: ‘SUM’,
+    name: 'SUM',
     option: [{
-        column: ‘column1’,
-        as: ‘sum1’,
+        column: 'column1',
+        as: 'sum1',
         distinct: false
     }, {
-        column: ‘column2’,
-        as: ‘sum2’,
+        column: 'column2',
+        as: 'sum2',
         distinct: false
     }]
 }
@@ -394,8 +395,8 @@ Model.save(req.body).then(res => {
 Model.update(req.body, {
     where: {
         condition: {
-            ‘fname’: ‘Swarup’,
-            ‘lname’: ‘Saha’,
+            fname: 'Swarup',
+            lname: 'Saha',
         }
     }
 }).then(res => {
@@ -419,8 +420,8 @@ Model.updateById(req.body, id).then(res => {
 Model.update({
     where: {
         condition: {
-            ‘fname’: ‘Swarup’,
-            ‘lname’: ‘Saha’,
+            fname: 'Swarup',
+            lname: 'Saha',
         }
     }
 }).then(res => {
@@ -441,12 +442,12 @@ Model.deleteById(id).then(res => {
 
 #### Raw Query
 ```javascript
-const Query = require('../snowflake-orm’).query;
+const Query = require('snowflake-orm').query;
 ```
 ##### With Params
 ```javascript
 let sql = "SELECT * FROM USER WHERE FNAME = ?";
-Query(sql, [“Swarup"]).then(data => {
+Query(sql, ['Swarup']).then(data => {
     res.send(data);
 }).catch(err => {
     console.log(err);

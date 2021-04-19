@@ -27,9 +27,9 @@ snowflakeOrm.connect(dbConfig);
 ### Data Type
 ##### NUMBER
 ```javascript
-NUMBER(length),
-INT(length),
-INTEGER(length),
+NUMBER,
+INT,
+INTEGER,
 FLOAT,
 DOUBLE,
 ```

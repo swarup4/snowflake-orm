@@ -88,14 +88,13 @@ const user = new Init("user", {
 });
 
 
-const userDetails = new ORM("userdetails", {
+const userDetails = new Init("userdetails", {
     id: {
-        type: SnowflakeOrm.INT,
-        primaryKey: true,			// Primary Key
-        autoIncrement: true		    // Auto Increment
+        type: SnowflakeOrm.VARCHAR(50),
+        require: true
     },
     userId: {
-        type: SnowflakeOrm.INT,
+        type: SnowflakeOrm.VARCHAR(50),
         allowNull: false,			// Do Not Allow Null Value
         references: {				// Foreign Key
             model: 'user', 			// 'user' refers to table name

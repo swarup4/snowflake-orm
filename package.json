@@ -1,6 +1,6 @@
 {
   "name": "snowflake-orm",
-  "version": "1.0.3-beta",
+  "version": "1.0.3",
   "description": "snowflake-orm is a ORM for NodeJS & Snowflake DB",
   "main": "index.js",
   "scripts": {

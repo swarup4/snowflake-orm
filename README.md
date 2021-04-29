@@ -87,7 +87,7 @@ const user = new Init("user", {
     }
 });
 
-
+// Without Using Primary Key & Foreign Key. Because Snowflake doesn't support Primary Key & Foreign Key
 const userDetails = new Init("userdetails", {
     id: {
         type: SnowflakeOrm.VARCHAR(50),
@@ -95,6 +95,22 @@ const userDetails = new Init("userdetails", {
     },
     userId: {
         type: SnowflakeOrm.VARCHAR(50),
+        allowNull: false
+    },
+    phone: SnowflakeOrm.INT,
+    gender: SnowflakeOrm.VARCHAR(10)
+});
+
+
+// Using Primary Key & Foreign Key
+const userDetails = new Init("userdetails", {
+    id: {
+        type: SnowflakeOrm.INT,
+        primaryKey: true,			// Primary Key
+        autoIncrement: true			// Auto Increment
+    },
+    userId: {
+        type: SnowflakeOrm.INT,
         allowNull: false,			// Do Not Allow Null Value
         references: {				// Foreign Key
             model: 'user', 			// 'user' refers to table name

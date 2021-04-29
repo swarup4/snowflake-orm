@@ -61,7 +61,10 @@ const user = new Init("user", {
         type: SnowflakeOrm.VARCHAR(50),
         require: true
     },
-    // This option still has present. But should not use, because Snowflake doesn't support primary key. Instead of using Id field & require: true. Its automatically create for you.
+    // This option still has present. But should not use, because Snowflake doesn't support primary key. 
+    // ** Instead of using Id field & 'require: true'. Its automatically create a Unique Key field for you.
+    //After thet when You insert any record, Automaticly unique key value insert into your Id field. Like Mongo DB using Mongoose.
+    // You can enter Id value manually. That time you have to mentation 'required: false'.
     // id: {
     //     type: SnowflakeOrm.INT,
     //     primaryKey: true,			// Primary Key

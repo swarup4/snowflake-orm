@@ -8,7 +8,7 @@ let dbConnection;
 const snowflakeObj = {
     connect: (connectionObj) => {
         return new Promise(function (resolve, reject) {
-            new snowflakeConnection(connectionObj).then(data => {
+            snowflakeConnection(connectionObj).then(data => {
                 dbConnection = data;
                 resolve('Successfully connected to Snowflake.');
             }, err => {

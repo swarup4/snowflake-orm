@@ -228,7 +228,6 @@ const snowflakeObj = {
         this.innerJoin = (obj) => {
             let joinType = " INNER JOIN ";
             let sql = helper.join(this.table, joinType, obj);
-            console.log(sql);
             return new Promise((resolve, reject) => {
                 dbConnection.execute({
                     sqlText: sql,
@@ -246,7 +245,6 @@ const snowflakeObj = {
         this.leftJoin = (obj) => {
             let joinType = " LEFT JOIN ";
             let sql = helper.join(this.table, joinType, obj);
-            console.log(sql);
             return new Promise((resolve, reject) => {
                 dbConnection.execute({
                     sqlText: sql,
@@ -264,7 +262,6 @@ const snowflakeObj = {
         this.rightJoin = (obj) => {
             let joinType = " RIGHT JOIN ";
             let sql = helper.join(this.table, joinType, obj);
-            console.log(sql);
             return new Promise((resolve, reject) => {
                 dbConnection.execute({
                     sqlText: sql,
@@ -282,7 +279,6 @@ const snowflakeObj = {
         this.fullJoin = (obj) => {
             let joinType = " FULL OUTER JOIN ";
             let sql = helper.join(this.table, joinType, obj);
-            console.log(sql);
             return new Promise((resolve, reject) => {
                 dbConnection.execute({
                     sqlText: sql,

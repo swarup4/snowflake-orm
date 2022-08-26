@@ -63,7 +63,6 @@ let query = {
                 } else if(typeof where.condition[key] == "object"){
                     if(where.condition[key].subQuery != undefined){
                         let sql = this.subQuery(where.condition[key].subQuery);
-                        console.log(sql);
                         whereArr.push(key + "=" + sql);
                     }
                 } else {
@@ -83,7 +82,6 @@ let query = {
                             if(typeof where.operator[key][1] == "object"){
                                 if(where.operator[key][1].subQuery != undefined){
                                     let sql = this.subQuery(where.operator[key][1].subQuery);
-                                    console.log(sql);
                                     whereArr.push(where.operator[key][0] + " " + key + " " + sql);
                                 }
                             }else{
@@ -93,7 +91,6 @@ let query = {
                             if(typeof where.operator[key][1] == "object"){
                                 if(where.operator[key][1].subQuery != undefined){
                                     let sql = this.subQuery(where.operator[key][1].subQuery);
-                                    console.log(sql);
                                     whereArr.push(where.operator[key][0] + " NOT LIKE '" + sql);
                                 }
                             }else{
@@ -133,7 +130,6 @@ let query = {
                             if(typeof where.operator[key][1] == "object"){
                                 if(where.operator[key][1].subQuery != undefined){
                                     let sql = this.subQuery(where.operator[key][1].subQuery);
-                                    console.log(sql);
                                     whereArr.push(where.operator[key][0] + " > " + sql);
                                 }
                             }else{
@@ -143,7 +139,6 @@ let query = {
                             if(typeof where.operator[key][1] == "object"){
                                 if(where.operator[key][1].subQuery != undefined){
                                     let sql = this.subQuery(where.operator[key][1].subQuery);
-                                    console.log(sql);
                                     whereArr.push(where.operator[key][0] + " >= " + sql);
                                 }
                             }else{
@@ -160,7 +155,6 @@ let query = {
                             if(typeof where.operator[key][1] == "object"){
                                 if(where.operator[key][1].subQuery != undefined){
                                     let sql = this.subQuery(where.operator[key][1].subQuery);
-                                    console.log(sql);
                                     whereArr.push(where.operator[key][0] + " < " + sql);
                                 }
                             }else{
@@ -170,7 +164,6 @@ let query = {
                             if(typeof where.operator[key][1] == "object"){
                                 if(where.operator[key][1].subQuery != undefined){
                                     let sql = this.subQuery(where.operator[key][1].subQuery);
-                                    console.log(sql);
                                     whereArr.push(where.operator[key][0] + " <= " + sql);
                                 }
                             }else{

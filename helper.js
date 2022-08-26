@@ -78,7 +78,6 @@ let helper = {
             sql = sql.concat(queryies.limit(condition.limit));
         }
 
-        console.log(sql);
         return sql;
     },
 

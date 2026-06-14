@@ -1,570 +1,449 @@
 # SNOWFLAKE-ORM
 
+A lightweight ORM for **Node.js + Snowflake**, written in TypeScript and shipping
+its own type definitions. Define models, run CRUD, joins, sub-queries and
+aggregates with a small, Sequelize-/Mongoose-flavoured API.
+
+> **v2.0 — full rewrite.** TypeScript core, connection pooling, typed errors and
+> **every value is parameter-bound** (no more string-concatenated SQL). The public
+> API (`connect`, `Init`, `save`, `find`, `update`, …) is preserved; see
+> [Migrating from 1.x](#migrating-from-1x).
+
+## Requirements
+
+- **Node.js 18 or newer** (Node 20 / 22 LTS recommended)
+- `snowflake-sdk` **2.x** and `uuid` **14.x** (installed automatically)
+
+The minimum is set by `snowflake-sdk` 2.x, which declares `engines: node >= 18`.
+
+| Node version | Supported |
+|--------------|:---------:|
+| 18 / 20 / 22 | ✅ |
+| 16 and older | ❌ — `snowflake-sdk` 2.x will warn on install (`EBADENGINE`) and may fail at runtime |
+
+This only concerns the Node runtime your application **runs on** — your own code
+can be written in any style. If you must stay on Node 16 or older (both past
+end-of-life), either upgrade Node, or pin to `snowflake-orm@1.x` (older
+`snowflake-sdk` 1.6 + `uuid` 8), which forgoes the 2.0 TypeScript, parameter-binding
+and pooling work.
+
 ## Installation
+
 ```sh
-$ npm i snowflake-orm
+npm i snowflake-orm
 ```
 
-## Documentation
+---
 
-### Connecting to Snowflake DB
-For creating the connection you have to Write this bellow code 
+## Quick start
+
 ```javascript
-const snowflakeOrm = require('snowflake-orm');
+const orm = require('snowflake-orm');
 
-const dbConfig = {
-    username: 'Your Username',
-    password: 'Your Password',
-    account: 'Your Account Name',
-    warehouse: 'Your Warehouse Name',
-    database: 'Your Database Name',
-    schema: 'Your Schema Name',
-    role: 'Your Role Name'
-};
-snowflakeOrm.connect(dbConfig);
+async function main() {
+  await orm.connect({
+    account: process.env.SNOWFLAKE_ACCOUNT,
+    username: process.env.SNOWFLAKE_USERNAME,
+    password: process.env.SNOWFLAKE_PASSWORD,
+    warehouse: process.env.SNOWFLAKE_WAREHOUSE,
+    database: process.env.SNOWFLAKE_DATABASE,
+    schema: process.env.SNOWFLAKE_SCHEMA,
+    role: process.env.SNOWFLAKE_ROLE,
+  });
+
+  const User = orm.define('users', {
+    id: { type: orm.VARCHAR(50), require: true },
+    name: orm.VARCHAR(100),
+    age: orm.INT,
+  });
+
+  await User.save({ name: 'Alice', age: 30 }); // id auto-generated (uuid)
+  const users = await User.find({ where: { condition: { name: 'Alice' } } });
+  console.log(users);
+
+  await orm.disconnect();
+}
+
+main().catch(console.error);
 ```
 
-### Data Type
-##### NUMBER
-```javascript
-NUMBER,
-INT,
-INTEGER,
-FLOAT,
-DOUBLE,
-```
-##### Text
-```javascript
-STRING(length),
-VARCHAR(length),
-CHAR(length),
-```
-##### Date Time
-```javascript
-DATE,
-DATETIME,
-TIMESTAMP(),	// (), (LTZ) & (NTZ)
-NOW()
-```
-##### OTHERS
-```javascript
-BINARY => "BINARY",
-BOOLEAN => "BOOLEAN"
+TypeScript:
+
+```typescript
+import orm, { Model, QueryError } from 'snowflake-orm';
+
+await orm.connect({ account, username, password });
+const User: Model = orm.define('users', { id: orm.VARCHAR(50), name: orm.VARCHAR(100) });
 ```
 
-### Model Create Example
+---
+
+## Connecting
+
+### Default connection (backward compatible)
+
+`connect()` is **async** and resolves once the credentials are validated.
+
 ```javascript
-const SnowflakeOrm = require('snowflake-orm');
-const Init = SnowflakeOrm.Init;
-const user = new Init("user", {
-    id: {
-        type: SnowflakeOrm.VARCHAR(50),
-        require: true
-    },
-    // This option still has present. But should not use, because Snowflake doesn't support primary key. 
-    // ** Instead of using Id field & 'require: true'. Its automatically create a Unique Key field for you.
-    //After thet when You insert any record, Automaticly unique key value insert into your Id field. Like Mongo DB using Mongoose.
-    // You can enter Id value manually. That time you have to mentation 'required: false'.
-    // id: {
-    //     type: SnowflakeOrm.INT,
-    //     primaryKey: true,			// Primary Key
-    //     autoIncrement: true			// Auto Increment
-    // },
-    fname: SnowflakeOrm.VARCHAR(50),
-    lname: SnowflakeOrm.VARCHAR(50),
-    username: {
-        type: SnowflakeOrm.VARCHAR(70),
-        unique: true,				// Unique Key
-        allowNull: true				// Allow Null Value
-    },
-    email: SnowflakeOrm.VARCHAR(70),
-    password: SnowflakeOrm.VARCHAR(50),
-    age: SnowflakeOrm.INT,
-    status: {
-        type: SnowflakeOrm.INT,
-        defaultValue: 1			    // Default Value = 1
-    },
-    createdAt: {
-        type: SnowflakeOrm.TIMESTAMP('LTZ'),
-        defaultValue: SnowflakeOrm.NOW()	// Default Value = Current Time
-    }
-});
+await orm.connect(dbConfig, options); // options is optional
+```
 
-// Without Using Primary Key & Foreign Key. Because Snowflake doesn't support Primary Key & Foreign Key
-const userDetails = new Init("userdetails", {
-    id: {
-        type: SnowflakeOrm.VARCHAR(50),
-        require: true
-    },
-    userId: {
-        type: SnowflakeOrm.VARCHAR(50),
-        allowNull: false
-    },
-    phone: SnowflakeOrm.INT,
-    gender: SnowflakeOrm.VARCHAR(10)
-});
+`dbConfig` accepts any [snowflake-sdk connection option](https://docs.snowflake.com/en/developer-guide/node-js/nodejs-driver-options)
+(`account`, `username`, `password`, `warehouse`, `database`, `schema`, `role`, …).
 
+`options`:
 
-// Using Primary Key & Foreign Key
-const userDetails = new Init("userdetails", {
-    id: {
-        type: SnowflakeOrm.INT,
-        primaryKey: true,			// Primary Key
-        autoIncrement: true			// Auto Increment
-    },
-    userId: {
-        type: SnowflakeOrm.INT,
-        allowNull: false,			// Do Not Allow Null Value
-        references: {				// Foreign Key
-            model: 'user', 			// 'user' refers to table name
-            column: 'id', 			// 'id' refers to column name in user table
-        }
-    },
-    phone: SnowflakeOrm.INT,
-    gender: SnowflakeOrm.VARCHAR(10)
+| Option | Type | Description |
+|--------|------|-------------|
+| `pool` | `{ min?, max? }` | Connection-pool sizing (defaults `min: 1`, `max: 10`). |
+| `logging` | `(entry) => void` | Called after each query with `{ sql, binds, durationMs, queryId }`. |
+| `disableOCSPChecks` | `boolean` | Turns off OCSP certificate-revocation checks. Local/dev only. |
+
+```javascript
+await orm.disconnect(); // drains the pool
+```
+
+### Explicit / multiple connections
+
+Use `createConnection` when you need more than one warehouse/database, or want to
+inject the connection into specific models.
+
+```javascript
+const analytics = orm.createConnection(analyticsConfig, { pool: { max: 20 } });
+await analytics.connect();
+
+const Event = orm.define('events', { id: orm.VARCHAR(50) }, analytics);
+
+await analytics.disconnect();
+```
+
+---
+
+## Defining models
+
+`define(tableName, schema, connection?)` returns a distinct `Model` instance — you
+can define as many models as you like and they never collide. The `connection`
+argument is optional and defaults to the connection created by `orm.connect()`.
+
+```javascript
+const User = orm.define('users', {
+  id: { type: orm.VARCHAR(50), require: true },
+  fname: orm.VARCHAR(50),
+  lname: orm.VARCHAR(50),
+  username: { type: orm.VARCHAR(70), unique: true, allowNull: true },
+  email: orm.VARCHAR(70),
+  age: orm.INT,
+  status: { type: orm.INT, defaultValue: 1 },
+  createdAt: { type: orm.TIMESTAMP('LTZ'), defaultValue: orm.NOW() },
 });
 ```
 
-#### Create dynamic table using Model
+> The legacy `new orm.Init(table, schema)` constructor still works and is
+> equivalent to `orm.define(table, schema)`.
+
+**`id` auto-generation:** if the `id` column is defined as an object with
+`require: true`, `save()` generates a UUID for you when you don't supply one —
+similar to Mongoose. Pass your own `id` to override it.
+
+### Column definition options
+
+| Key | Description |
+|-----|-------------|
+| `type` | A data type (see below). |
+| `require` | On `id` only — auto-generate a UUID on `save()`. |
+| `allowNull` | `true` → `NULL`, `false` → `NOT NULL`. |
+| `defaultValue` | Column default (e.g. `1`, `orm.NOW()`). |
+| `primaryKey` | Adds `PRIMARY KEY`. |
+| `unique` | Adds `UNIQUE`. |
+| `autoIncrement` | Adds `AUTOINCREMENT`. |
+| `references` | `{ model, column }` → `FOREIGN KEY`. |
+
+> Snowflake does not enforce `PRIMARY KEY` / `FOREIGN KEY` / `UNIQUE` constraints —
+> they are accepted but informational. Prefer the `id` + `require: true` pattern.
+
+### Data types
+
 ```javascript
-Model.create().then(data => {
-    res.send(data);
-}).catch(err => {
-    console.log(err);
+// Numbers
+orm.NUMBER, orm.INT, orm.INTEGER, orm.FLOAT, orm.DOUBLE
+// Text
+orm.STRING(length), orm.VARCHAR(length), orm.CHAR(length)
+// Date / time
+orm.DATE, orm.DATETIME, orm.TIMESTAMP(), orm.TIMESTAMP('LTZ'), orm.TIMESTAMP('NTZ'), orm.NOW()
+// Other
+orm.BINARY, orm.BOOLEAN, orm.ARRAY
+```
+
+### Create / drop the table
+
+```javascript
+await User.create(); // CREATE TABLE
+await User.drop();   // DROP TABLE
+```
+
+---
+
+## CRUD
+
+All methods are `async`. **Finders** resolve to data; **writes** resolve to a
+normalized result object `{ rows, rowCount, queryId }`.
+
+| Method | Resolves to |
+|--------|-------------|
+| `find(options)` | `Row[]` |
+| `findById(id)` | `Row \| undefined` |
+| `findByFunction(options)` | `Row \| undefined` |
+| `save(data)` | `{ rows, rowCount, queryId }` |
+| `update(data, options)` | `{ rows, rowCount, queryId }` |
+| `updateById(data, id)` | `{ rows, rowCount, queryId }` |
+| `delete(options)` | `{ rows, rowCount, queryId }` |
+| `deleteById(id)` | `{ rows, rowCount, queryId }` |
+
+> **Security:** every value you pass is sent as a bound parameter — never
+> concatenated into SQL — so input like `"'; DROP TABLE users; --"` is stored as a
+> literal string, not executed.
+
+### Insert
+
+```javascript
+const result = await User.save(req.body);
+console.log(result.rowCount, result.queryId);
+```
+
+### Update
+
+```javascript
+await User.update(req.body, {
+  where: { condition: { fname: 'Swarup', lname: 'Saha' } },
 });
 ```
 
-Snowflake doesn't support Primary Key, Foreign Key, Unique Key constraint. For that reason don't use these constraint. But constraint are still present in this ORM. 
+### Update by id
 
-### Fetch Data
-Getting data from database.
-
-#### Find All
 ```javascript
-Model.find({}).then(res => {
-    res.send(res);
-}).catch(err => {
-    res.send(err);
+await User.updateById(req.body, id);
+```
+
+### Delete
+
+```javascript
+await User.delete({
+  where: { condition: { fname: 'Swarup', lname: 'Saha' } },
 });
 ```
 
+### Delete by id
 
-#### Column List  (With All Column)
 ```javascript
-Model.find({
-    column: []
-}).then(res => {
-    res.send(res);
+await User.deleteById(id);
+```
+
+---
+
+## Querying with `find`
+
+`find(options)` accepts `column`, `distinct`, `where`, `order` and `limit`.
+
+```javascript
+await User.find({});                                  // all rows
+await User.find({ column: ['fname', 'lname'] });      // selected columns
+await User.find({ column: ['fname'], distinct: true });
+```
+
+### Where — equality
+
+```javascript
+await User.find({
+  where: { condition: { fname: 'Swarup', lname: 'Saha' } },
 });
 ```
 
+### Where — operators
 
-#### Column List  (With Specific Column)
-```javascript
-Model.find({
-    column: [column1, column2, column3]
-}).then(res => {
-    res.send(res);
-});
+Operators take an **array** of `[field, ...values]`. Keys are case-insensitive.
 
-```
-
-#### Where Clause  (With Equal)
-```javascript
-Model.find({
-    where: {
-        condition: {
-            fname: 'Swarup',
-            lname: 'Saha',
-        }
-    }
-}).then(res => {
-    res.send(res);
-}).catch(err => {
-    res.send(err);
-});
-```
-
-
-#### Where Clause  (With Operator)
-##### LIKE
 ```javascript
 where: {
-    operator: {
-        LIKE: [
-            {
-                filed: 'fname',
-                value: 'A%'
-            }
-        ]
-    }
+  operator: {
+    LIKE:       ['fname', 'A%'],      // fname LIKE 'A%'
+    NOTLIKE:    ['fname', 'A%'],      // fname NOT LIKE 'A%'
+    BETWEEN:    ['age', 25, 28],      // age BETWEEN 25 AND 28
+    NOTBETWEEN: ['age', 25, 28],
+    IN:         ['age', 24, 26, 28],  // age IN (24, 26, 28)
+    NOTIN:      ['age', 24, 26, 28],
+    GT:         ['age', 25],          // age > 25
+    GTE:        ['age', 25],          // age >= 25
+    LT:         ['age', 27],          // age < 27
+    LTE:        ['age', 27],          // age <= 27
+  },
 }
 ```
 
-##### NOT LIKE
-```javascript
-operator: {
-    NOTLIKE: [
-        {
-            filed: 'fname',
-            value: 'A%'
-        }
-    ]
-}
-```
+`condition` and `operator` can be combined; clauses are joined with `AND`.
 
-##### BETWEEN
-```javascript
-operator: {
-    BETWEEN: ['age', 25, 28]
-}
-```
-##### NOT BETWEEN
-```javascript
-operator: {
-    NOTBETWEEN: ['age', 25, 28]
-}
-```
-##### IN
-```javascript
-operator: {
-    IN: ['age', 24, 26, 28]
-}
+### Order by
 
-//Or
-
-operator: {
-    IN: {
-        filed: 'age',
-        value: [24, 26, 28]
-    }
-}
-```
-##### NOT IN
 ```javascript
-operator: {
-    NOTIN: ['age', 24, 26, 28]
-}
-
-//Or
-
-operator: {
-    NOTIN: {
-        filed: 'age',
-        value: [24, 26, 28]
-    }
-}
-```
-##### GREATER THEN
-```javascript
-operator: {
-    GT: ['age', 25]
-}
-```
-##### GREATER THEN OR EQUAL
-```javascript
-operator: {
-    GTE: ['age', 25]
-}
-```
-##### LESS THEN
-```javascript
-operator: {
-    LT: ['age', 27]
-}
-```
-##### LESS THEN OR EQUAL
-```javascript
-operator: {
-    LTE: ['age', 27]
-}
-```
-
-##### Order By
-```javascript
-Model.find({
-    order: {
-        field: 'column',
-        orderBy: 'DESC'	// For Descending order DESC & for Ascending Order ASC. Default is Ascending order
-    }
-}).then(res => {
-    res.send(res);
+await User.find({
+  order: { field: 'age', orderBy: 'DESC' }, // ASC (default) or DESC
 });
 ```
 
-#### Distinct
+### Limit & offset
+
 ```javascript
-Model.find({
-    column: [column1, column2, column3],
-    distinct: true,
-    where: {}
-}).then(res => {
-    res.send(res);
-}).catch(err => {
-    res.send(err);
+await User.find({ limit: 4 });        // LIMIT 4
+await User.find({ limit: [4, 1] });   // LIMIT 4 OFFSET 1
+```
+
+---
+
+## Aggregate functions
+
+`findByFunction` takes a `functions` **array**; each entry is `{ name, option }`,
+and `option` is an array of `{ column, as?, distinct? }`. Resolves to a single row.
+
+```javascript
+await User.findByFunction({
+  functions: [
+    { name: 'COUNT', option: [{ column: 'id', as: 'count', distinct: true }] },
+  ],
+  where: { condition: { status: 1 } }, // optional
 });
 ```
 
+Multiple functions / columns:
 
-
-#### Limit & Offset
 ```javascript
-Model.find({
-    limit: [4, 1]	// 1st Parameter for Limit & 2nd Parameter for Offset
-}).then(res => {
-    res.send(res);
-});
-```
-##### Only LIMIT
-```javascript
-Model.find({
-    limit: 4
-}).then(res => {
-    res.send(res);
+await Order.findByFunction({
+  functions: [
+    { name: 'SUM', option: [{ column: 'total', as: 'sumTotal' }, { column: 'tax', as: 'sumTax' }] },
+    { name: 'AVG', option: [{ column: 'total', as: 'avgTotal' }] },
+    { name: 'MAX', option: [{ column: 'total', as: 'maxTotal', distinct: true }] },
+    { name: 'MIN', option: [{ column: 'total', as: 'minTotal' }] },
+  ],
 });
 ```
 
+---
 
-#### Function
-##### Count()
+## Joins
+
+Join methods: `innerJoin`, `leftJoin`, `rightJoin`, `fullJoin`. `eqColumn` is the
+join key on the base table; each `include` supplies its own `column` list and
+`eqColumn`. `where`, `order`, `limit` and `distinct` are supported.
+
 ```javascript
-Model.findByFunction({
-    functions: {
-        name: 'COUNT',
-        option: [{
-            column: 'column1',
-            as: 'count',
-            distinct: true
-        }]
-    }
-    where: {}		// Optional
-}).then(res => {
-    res.send(res);
+const obj = {
+  column: ['fname'],
+  eqColumn: 'id',
+  include: [
+    { model: UserDetails, column: ['homeTown'], eqColumn: 'userId' },
+    { model: UserImage,   column: ['image'],    eqColumn: 'userId' },
+  ],
+  where: { operator: { GT: ['age', 26] } },
+};
+
+await User.innerJoin(obj);
+await User.leftJoin(obj);
+await User.rightJoin(obj);
+await User.fullJoin(obj);
+```
+
+---
+
+## Sub-queries
+
+A `condition` (or operator) value can be a sub-query. The inner query is inlined
+and its bound values are merged into the parent statement.
+
+```javascript
+await User.find({
+  column: ['fname', 'lname'],
+  where: {
+    condition: {
+      id: {
+        subQuery: {
+          model: UserImage,
+          column: ['userId'],
+          where: { condition: { image: 'profile.jpg' } },
+        },
+      },
+    },
+  },
 });
 ```
 
-##### Avg()
+---
+
+## Raw queries
+
 ```javascript
-functions: {
-    name: 'AVG',
-    option: [{
-        column: 'column1',
-        as: 'Average',
-        distinct: false
-    }]
+const { query } = require('snowflake-orm');
+
+// With binds (recommended)
+await query('SELECT * FROM users WHERE fname = ?', ['Swarup']);
+
+// Without binds
+await query('SELECT * FROM users');
+```
+
+`query` resolves to the rows array.
+
+---
+
+## Errors
+
+Typed errors are exported so you can branch on failure type:
+
+```javascript
+const { ConnectionError, QueryError, ValidationError } = require('snowflake-orm');
+
+try {
+  await User.find({ where: { condition: { name: 'x' } } });
+} catch (err) {
+  if (err instanceof QueryError) {
+    console.error(err.message, err.sql, err.binds);
+  }
 }
 ```
 
-##### Max()
-```javascript
-functions: {
-    name: 'MAX',
-    option: [{
-        column: 'column1',
-        as: 'maximum',
-        distinct: true
-    }]
-}
-```
+| Error | Thrown when |
+|-------|-------------|
+| `ConnectionError` | Connect fails, or a query runs before `connect()`. |
+| `QueryError` | A statement fails. Carries `sql` and `binds`. |
+| `ValidationError` | Reserved for schema validation (Phase 1). |
 
-##### Min()
-```javascript
-functions: {
-    name: 'MIN',
-    option: [{
-        column: 'column1',
-        as: 'minimum',
-        distinct: false
-    }]
-}
-```
+---
 
-##### Sum()
-```javascript
-functions: {
-    name: 'SUM',
-    option: [{
-        column: 'column1',
-        as: 'sum1',
-        distinct: false
-    }, {
-        column: 'column2',
-        as: 'sum2',
-        distinct: false
-    }]
-}
-```
-
-
-### CRUD
-#### Insert
-If you want primary key constraint. But Snowflake doesn't support Primary Key. It's accept duplicate value. So use ID object in Models. ```require: true```. Its autometicly create unique id & insert into table. 
+## Logging
 
 ```javascript
-Model.save(req.body).then(res => {
-    res.send(res);
-}).catch(err => {
-    res.send(err);
+await orm.connect(dbConfig, {
+  logging: ({ sql, binds, durationMs, queryId }) =>
+    console.log(`[${durationMs}ms] ${sql} -- ${JSON.stringify(binds)}`),
 });
 ```
 
-#### Update
-```javascript
-Model.update(req.body, {
-    where: {
-        condition: {
-            fname: 'Swarup',
-            lname: 'Saha',
-        }
-    }
-}).then(res => {
-    res.send(res);
-}).catch(err => {
-    res.send(err);
-});
-```
+---
 
-#### UpdateByID
-```javascript
-Model.updateById(req.body, id).then(res => {
-    res.send(res);
-}).catch(err => {
-    res.send(err);
-});
-```
+## Migrating from 1.x
 
-#### Delete
-```javascript
-Model.update({
-    where: {
-        condition: {
-            fname: 'Swarup',
-            lname: 'Saha',
-        }
-    }
-}).then(res => {
-    res.send(res);
-}).catch(err => {
-    res.send(err);
-});
-```
+The public API is preserved, but a few behaviours changed:
 
-#### DeleteByID
-```javascript
-Model.deleteById(id).then(res => {
-    res.send(res);
-}).catch(err => {
-    res.send(err);
-});
-```
+- **`connect()` is async** — `await` it (or chain `.then`) before running queries.
+- **Result shapes:** `find` resolves to a rows array; `findById`/`findByFunction`
+  resolve to a single row; writes resolve to `{ rows, rowCount, queryId }`.
+- **`findByFunction`** takes a `functions` **array** (was sometimes shown as an
+  object in 1.x docs).
+- **Operators** use the array form `LIKE: ['fname', 'A%']` (the 1.x object form
+  `[{ filed, value }]` is no longer accepted).
+- **All values are bound** — behaviour is identical for valid input, but injection
+  payloads are now neutralized.
+- New: `createConnection`, `disconnect`, connection pooling, `logging`, typed errors.
 
-#### Raw Query
-```javascript
-const Query = require('snowflake-orm').query;
-```
-##### With Params
-```javascript
-let sql = "SELECT * FROM USER WHERE FNAME = ?";
-Query(sql, ['Swarup']).then(data => {
-    res.send(data);
-}).catch(err => {
-    console.log(err);
-});
-```
-##### Without Params
-```javascript
-let sql = "SELECT * FROM USER";
-Query(sql).then(data => {
-    res.send(data);
-}).catch(err => {
-    console.log(err);
-});
-```
+---
 
-### Joining 
-#### Inner Join
-```javascript
-let obj = {
-    column: ['fname'],
-    eqColumn: 'id',
-    include: [{
-        model: Model2,
-        column: ['homeTown'],
-        eqcolumn: 'userId'
-    }, {
-        model: Model3,
-        column: ['image'],
-        eqColumn: 'userId'
-    }],
-    where: {
-        operator: {
-            GT: ['age', 26]
-        }
-    }
-}
+## License
 
-Model.innerJoin(obj).then(data => {
-    res.send(data);
-}).catch(err => {
-    console.log(err);
-});
-```
-
-#### Right Join
-```javascript
-Model.rightJoin(obj).then(data => {
-    res.send(data);
-}).catch(err => {
-	console.log(err);
-});
-```
-
-#### Left Join
-```javascript
-Model.leftJoin(obj).then(data => {
-    res.send(data);
-}).catch(err => {
-    console.log(err);
-});
-```
-
-#### Full Join
-```javascript
-Model.fullJoin(obj).then(data => {
-    res.send(data);
-}).catch(err => {
-    console.log(err);
-});
-```
-
-
-### SubQuery 
-
-#### Condition
-```javascript
-let obj = {
-    column:  ['fname', 'lname'],
-    where: {
-        condition: {
-            id: {
-                subQuery: {
-                    model: Model2,
-                    column: ['userId'],
-                    where: {
-                        condition: {
-                            image: 'Swarup Profile Pics.jpg'
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-Model.find(obj).then(data => {
-    res.send(data);
-}).catch(err => {
-    console.log(err);
-});
-```
+ISC

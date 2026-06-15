@@ -13,7 +13,7 @@
     "prepublishOnly": "npm run clean && npm run build",
     "typecheck": "tsc --noEmit",
     "pretest": "npm run build",
-    "test": "node --test test/sql-builder.test.js test/integration.test.js test/live.test.js"
+    "test": "node --test test/query-compiler.test.js test/integration.test.js test/live.test.js"
   },
   "repository": {
     "type": "git",

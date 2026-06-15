@@ -2,11 +2,13 @@ import { Connection } from './connection';
 import { DataType } from './data-types';
 import { ConnectionError } from './errors';
 import { Model } from './model';
+import { SnowflakeQueryCompiler } from './sql/query-compiler';
 import type {
     Bind,
     ConnectionConfig,
     ConnectOptions,
     Executor,
+    QueryCompiler,
     QueryResult,
     Schema,
 } from './types';
@@ -20,7 +22,21 @@ export {
     QueryError,
     ValidationError,
 } from './errors';
+export { SnowflakeQueryCompiler } from './sql/query-compiler';
+export { WhereBuilder } from './sql/where-builder';
+export {
+    OperatorRegistry,
+    defaultOperatorRegistry,
+    ComparisonOperator,
+    LikeOperator,
+    BetweenOperator,
+    InOperator,
+} from './sql/operators';
+export type { SqlOperator, OperatorContext } from './sql/operators';
 export * from './types';
+
+/** Default compiler shared by models created through the module-level API. */
+const defaultCompiler = new SnowflakeQueryCompiler();
 
 /** Module-level default connection, set by connect() for the backward-compatible API. */
 let defaultConnection: Connection | null = null;
@@ -64,8 +80,13 @@ export function query<T = Record<string, unknown>>(sql: string, values?: Bind[])
 }
 
 /** Modern API: define a model on an explicit connection (defaults to the module connection). */
-export function define(table: string, schema: Schema, connection?: Executor): Model {
-    return new Model(table, schema, connection ?? defaultExecutor);
+export function define(
+    table: string,
+    schema: Schema,
+    connection?: Executor,
+    compiler: QueryCompiler = defaultCompiler,
+): Model {
+    return new Model(table, schema, connection ?? defaultExecutor, compiler);
 }
 
 /**
@@ -73,7 +94,7 @@ export function define(table: string, schema: Schema, connection?: Executor): Mo
  * Returns a Model bound to the late-bound default connection.
  */
 export const Init = function (this: unknown, table: string, schema: Schema): Model {
-    return new Model(table, schema, defaultExecutor);
+    return new Model(table, schema, defaultExecutor, defaultCompiler);
 } as unknown as { new(table: string, schema: Schema): Model };
 
 // Re-export DataType helpers as top-level names so `require('snowflake-orm').VARCHAR(50)`

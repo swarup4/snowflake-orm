@@ -126,3 +126,21 @@ export interface JoinOptions {
     order?: OrderClause;
     limit?: LimitClause;
 }
+
+/**
+ * Abstraction the Model depends on (Dependency Inversion). Any object that can turn
+ * the typed options into bound SQL can back a Model — the default is SnowflakeQueryCompiler.
+ */
+export interface QueryCompiler {
+    select(table: string, options: FindOptions): BoundSql;
+    selectById(table: string, id: Bind): BoundSql;
+    functionSelect(table: string, options: FindByFunctionOptions): BoundSql;
+    insert(table: string, data: Record<string, Bind>): BoundSql;
+    update(table: string, data: Record<string, Bind>, where?: WhereClause): BoundSql;
+    updateById(table: string, data: Record<string, Bind>, id: Bind): BoundSql;
+    delete(table: string, where?: WhereClause): BoundSql;
+    deleteById(table: string, id: Bind): BoundSql;
+    join(table: string, joinType: string, options: JoinOptions): BoundSql;
+    createTable(table: string, schema: Schema): string;
+    dropTable(table: string): string;
+}
